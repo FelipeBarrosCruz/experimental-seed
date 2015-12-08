@@ -5,10 +5,10 @@
 ### Routes
 
 ```
-routes/example.js
+app/routes/**/index.js
 ```
 
-### Test
+# Test #
 ```
  http://url/module/urlRoute
 ```
