@@ -92,13 +92,20 @@ let RegisterAPI = function(Router, component) {
     configuration.pushApi(componentAction.api);
 
     if (typeof Router[method] === 'function') {
-        dev.debug(
-            'Invoke on Router '.cyan + '[%s]'.yellow + ' => '.cyan + '[%s]'.yellow +  ' API Component'.cyan,
-             componentName,
-             componentAction.api
-        );
 
-        Router[method].apply(Router, configuration.instance());
+        let midleware = function(req, res, next) {
+            dev.debug(
+                'Invoke on Router '.cyan + '[%s]'.yellow + ' => '.cyan + '[%s]'.yellow +  ' API Component'.cyan,
+                 componentName,
+                 componentAction.api
+            );
+            next(null);
+        };
+
+        let instance = configuration.instance(),
+            args     = [instance[0], midleware, instance.slice(1)];
+
+        Router[method].apply(Router, args);
     }
 };
 
