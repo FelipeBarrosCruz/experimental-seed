@@ -1,0 +1,19 @@
+{
+  "name": "fevl-components-integrator",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node index.js",
+    "only": "node index.js"
+  },
+  "dependencies": {
+    "async": "^1.4.2",
+    "body-parser": "~1.8.0",
+    "colors": "^1.1.2",
+    "express": "~4.8.8",
+    "glob": "^6.0.1",
+    "mongoose": "^4.2.10",
+    "seraph": "^0.14.0"
+  },
+  "devDependencies": {}
+}
