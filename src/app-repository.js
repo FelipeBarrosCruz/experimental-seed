@@ -30,7 +30,11 @@ let AppRepository = (function() {
             try {
                 response = this.set(name, require(name));
             } catch(err) {
-                dev.debug('Package'.red + ' [%] '.yellow + 'required doest exist'.red, name);
+                if (err.code == 'MODULE_NOT_FOUND') {
+                   return dev.debug('Package'.red + ' [%s] '.yellow + 'required doest exist'.red, name);
+
+                }
+                throw err;
             }
 
             return response;
