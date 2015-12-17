@@ -2,7 +2,7 @@
 var mongoose = require('mongoose');
 
 let MongoDBConnection = function(configuration, onFinish) {
-    let database   = configuration.database,
+    let database   = configuration,
         server     = 'mongodb://${h}/${c}'.replace('${h}', database.host).replace('${c}', database.collection),
         connection = mongoose.connect(server);
 
@@ -20,7 +20,7 @@ let MongoDBConnection = function(configuration, onFinish) {
         return onFinish(null);
     });
 
-    return configuration.repository['mongo'] =  connection;
+    return connection;
 };
 
 module.exports = MongoDBConnection;

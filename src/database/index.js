@@ -12,15 +12,27 @@ let Database = function(configuration, onFinish) {
         return dir.concat(['src', 'database', name, 'index.js'].join('/'));
     }
 
+    let setDatabaseRepository = function(name, value) {
+        if (configuration.repository.exists(name)) {
+            dev.debug('[%s] '.yellow + 'package already exist in repository, be careful'.red, name);
+        }
+        configuration.repository.set(name, value);
+    }
+
     let databaseTasks =  [];
 
-    let pushTask = function(name, database) {
+    let pushTask = function(name, data) {
         databaseTasks.push(function registerDatabase(done) {
-            let Database = require(getDatabaseLocation(name));
-            Database({
-                repository: repository,
-                database: database
-            }, done);
+            try {
+                let Database = require(getDatabaseLocation(name));
+                setDatabaseRepository((data.name || name), Database(data, done));
+            } catch(err) {
+                if (err.code == 'MODULE_NOT_FOUND') {
+                    dev.debug('%s'.red, err);
+                    doNext(null);
+                }
+                throw err;
+            }
         });
     };
 

@@ -8,7 +8,8 @@ let Adapter = function(configuration, onFinish) {
             ? configuration.dir.replace(/\/$/, '')
             : configuration.dir;
 
-    let adapters = configuration.data;
+    let adapters    = configuration.data,
+        repository  = configuration.repository;
 
     let adapterTasks = [];
 
@@ -31,10 +32,44 @@ let Adapter = function(configuration, onFinish) {
         });
     };
 
+
+    let Injector = (function() {
+
+            let register = function(args) {
+                let argsLength  = args.length;
+
+                if (!argsLength) {
+                    return;
+                }
+
+                let midleware = argsLength && (args.splice((argsLength - 1), 1))[0];
+
+                if (typeof midleware !== 'function') {
+                    throw 'Exec midleware must be a function';
+                }
+
+                let toInject = [];
+
+                for(let i = 0; i < argsLength; i++) {
+                    if (Array.isArray(args[i]) && !args[i].length || !args[i] || args[i] !== undefined && !repository.exists(args[i])) {
+                        continue;
+                    }
+                    toInject.push(repository.get(args[i]));
+                }
+
+                return midleware.apply(midleware, toInject);
+            };
+
+            return {
+                register: register
+            };
+        })();
+
     for(let adapterName in adapters) {
         let adapterConfiguration = {
             app:        app,
             dir:        dir,
+            injector:   Injector,
             location:   adapters[adapterName].location || []
         };
         pushTask(adapterName, adapterConfiguration);

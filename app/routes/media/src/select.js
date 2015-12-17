@@ -3,7 +3,7 @@
 let ActionRequest = function(Repository) {
 
     let sayHello = function(name) {
-        return 'Hello '
+        return 'Hello '.concat(name);
     };
 
     return function midleware(req, res, next) {

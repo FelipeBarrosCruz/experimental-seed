@@ -1,8 +1,16 @@
 'use strict';
 
-let ActionRequest = function(req, res, next) {
+let ActionRequest = function(Repository) {
 
-    res.end('Baaaaaaaaa => ' + req.params.bar || 'FOO');
+    let sayHello = function(name) {
+        return 'Hello '
+    };
+
+    return function midleware(req, res, next) {
+        res.end(sayHello(req.params.name || 'world'));
+    };
 };
 
-module.exports = ActionRequest;
+let Inject = ['Repository', ActionRequest];
+
+module.exports = Inject;

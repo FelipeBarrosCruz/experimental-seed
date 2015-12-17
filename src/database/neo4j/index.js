@@ -2,7 +2,7 @@
 let seraph = require('seraph');
 
 let Neo4jDBConnection = function(configuration, onFinish) {
-    let database = configuration.database,
+    let database = configuration,
         server = 'http://${h}:${p}'.replace('${h}', database.host).replace('${p}', database.port),
         connection = seraph({
             server: server,
@@ -25,7 +25,7 @@ let Neo4jDBConnection = function(configuration, onFinish) {
         return onFinish(null);;
     });
 
-    return configuration.repository['neo4j'] = connection;
+    return connection;
 };
 
 module.exports = Neo4jDBConnection;

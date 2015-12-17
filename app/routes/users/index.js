@@ -1,7 +1,7 @@
 'use strict';
 
 let Router = {
-    example: [{
+    users: [{
         method: 'GET',
         url: '/say/hello',
         api: 'sayHello'

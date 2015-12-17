@@ -5,9 +5,10 @@ let async               = require('async'),
 
 let RegisterRouter = function(configuration, done) {
 
-    let app  = configuration.app,
-        path = configuration.path,
-        routerList = configuration.routerList;
+    let app         = configuration.app,
+        path        = configuration.path,
+        injector    = configuration.injector,
+        routerList  = configuration.routerList;
 
     let getModuleName   = function(module) {
         let result;
@@ -40,8 +41,9 @@ let RegisterRouter = function(configuration, done) {
     app.use(
             formatModuleName(name),
             registerComponent({
-                name: name,
-                path: path,
+                name:       name,
+                path:       path,
+                injector:   injector,
                 component: component
             })
     );
@@ -73,12 +75,13 @@ let RoutesAdapter = function(configuration) {
             RegisterRouter({
                 app:        app,
                 path:       formatPathName(file),
+                injector:   configuration.injector,
                 routerList: require(file)
             }, done);
         });
     };
 
-    glob(location, {cache: true,}, function onLoadFiles(err, files) {
+    glob(location, {cache: true}, function onLoadFiles(err, files) {
         for(let i = 0; i < files.length; i++) {
             pushTask(files[i]);
         }

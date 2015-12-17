@@ -1,4 +1,5 @@
 'use strict';
+let Multer = require('multer');
 
 let validateComponent = function(componentAction) {
     let status = false;
@@ -68,9 +69,7 @@ let Configuration = function(component) {
     };
 };
 
-let RegisterAPI = function(Router, component) {
-
-
+let RegisterAPI = function(Router, Injector, component) {
 
     let componentName   = component.name,
         componentPath   = component.path,
@@ -93,7 +92,7 @@ let RegisterAPI = function(Router, component) {
 
     if (typeof Router[method] === 'function') {
 
-        let midleware = function(req, res, next) {
+        let defaultMidleware = function(req, res, next) {
             dev.debug(
                 'Invoke on Router '.cyan + '[%s]'.yellow + ' => '.cyan + '[%s]'.yellow +  ' API Component'.cyan,
                  componentName,
@@ -103,7 +102,10 @@ let RegisterAPI = function(Router, component) {
         };
 
         let instance = configuration.instance(),
-            args     = [instance[0], midleware, instance.slice(1)];
+            router   = instance.length && instance[0],
+            toInject = instance.length > 1 && instance.splice((instance.length - 1), 1)[0],
+            exec     = Injector.register(toInject),
+            args     = [router, defaultMidleware, Multer().any(), exec];
 
         Router[method].apply(Router, args);
     }

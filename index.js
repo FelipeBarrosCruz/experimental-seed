@@ -9,7 +9,6 @@ let Application  = require('./src/application'),
     APP_HOST     = 'http://localhost',
     APP_PORT     = (process.env.NODE_ENV == 'production') ? 80 : 3232;
 
-// Create a new Express Application instance
 let onStart  = function(server) {
 
     let adapter = {
@@ -26,6 +25,7 @@ let onStart  = function(server) {
 
     let database = {
         mongo: {
+            name: 'database.mongo',
             host: '192.165.33.56',
             port: 27017,
             collection: 'fvel',
@@ -36,6 +36,7 @@ let onStart  = function(server) {
             debug: true
         },
         neo4j: {
+            name: 'database.neo4j',
             host: '192.165.33.20',
             port: 7474,
             auth: {

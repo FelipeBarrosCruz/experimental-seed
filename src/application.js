@@ -2,11 +2,14 @@
 let express         = require('express'),
     bodyParser      = require('body-parser'),
     development     = require('./development'),
+    AppRepository   = require('./app-repository'),
     async           = require('async');
 
 let Application = function(onStart, onFinish) {
     var app = express();
 
+    AppRepository.set('App', app);
+    AppRepository.set('Repository', AppRepository);
     app.use(bodyParser.urlencoded({ extended: false }));
     app.use(bodyParser.json());
 
@@ -18,11 +21,18 @@ let Application = function(onStart, onFinish) {
 
     let pushTask = function(name, data) {
         mainTasks.push(function registerMainTask(next) {
-            require('./${name}'.replace('${name}', name))({
-                app:  app,
-                dir:  configuration.dir,
-                data: data
-            }, next);
+            try {
+                require('./${name}'.replace('${name}', name))({
+                    app:        app,
+                    repository: AppRepository,
+                    dir:        configuration.dir,
+                    data:       data
+                }, next);
+            }
+            catch(err) {
+                console.log(err);
+                next(null);
+            }
         });
     }
 

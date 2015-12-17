@@ -5,7 +5,8 @@ function registerComponent(configuration) {
 
     let name        = configuration.name,
         path        = configuration.path,
-        component   = configuration.component;
+        component   = configuration.component,
+        injector    = configuration.injector;
 
     dev.debug('Register %s component'.cyan, name);
 
@@ -14,10 +15,11 @@ function registerComponent(configuration) {
     let asyncTasks = [];
 
     let registerApiComponent = function(actionRequest) {
-        registerAPI(Router, {
-            path: path,
-            name: name,
-            action: actionRequest
+        registerAPI(Router, injector, {
+            path:       path,
+            name:       name,
+            injector:   injector,
+            action:     actionRequest
         });
     };
 
