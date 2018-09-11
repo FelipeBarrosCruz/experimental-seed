@@ -1,0 +1,17 @@
+{
+    "client": {
+        "maxAsyncS3":               20,
+        "s3RetryCount":             3,
+        "s3RetryDelay":             1000,
+        "multipartUploadThreshold": 20971520,
+        "multipartUploadSize":      15728640,
+        "s3Options": {
+            "accessKeyId": "youracessid",
+            "secretAccessKey": "youracessSecret",
+            "region": "sa-east-1"
+        }
+    },
+    "bucket": {
+        "name": "yourbucket"
+    }
+}

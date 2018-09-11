@@ -6,8 +6,6 @@ let Database = function(configuration, onFinish) {
         dir  = configuration.dir,
         data = configuration.data;
 
-    let repository = {};
-
     let getDatabaseLocation = function(name) {
         return dir.concat(['src', 'database', name, 'index.js'].join('/'));
     }
@@ -25,7 +23,8 @@ let Database = function(configuration, onFinish) {
         databaseTasks.push(function registerDatabase(done) {
             try {
                 let Database = require(getDatabaseLocation(name));
-                setDatabaseRepository((data.name || name), Database(data, done));
+                dev.debug('Connect to database'.cyan + ' [%s] '.yellow, data.database.name);
+                setDatabaseRepository((data.database.name || name), Database(data, done));
             } catch(err) {
                 if (err.code == 'MODULE_NOT_FOUND') {
                     dev.debug('%s'.red, err);
@@ -37,7 +36,25 @@ let Database = function(configuration, onFinish) {
     };
 
     for(let name in data) {
-        pushTask(name, data[name]);
+        let Database = data[name];
+
+        if (!Array.isArray(Database)) {
+            pushTask(name, {
+                app:        app,
+                repository: configuration.repository,
+                database:   data[name]
+            });
+        }
+
+        if (Array.isArray(Database)) {
+            for(let index in Database) {
+                pushTask(name, {
+                    app:        app,
+                    repository: configuration.repository,
+                    database:   Database[index]
+                });
+            }
+        }
     }
 
     async.waterfall(databaseTasks, function finish() {

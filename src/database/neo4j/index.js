@@ -2,7 +2,7 @@
 let seraph = require('seraph');
 
 let Neo4jDBConnection = function(configuration, onFinish) {
-    let database = configuration,
+    let database = configuration.database,
         server = 'http://${h}:${p}'.replace('${h}', database.host).replace('${p}', database.port),
         connection = seraph({
             server: server,

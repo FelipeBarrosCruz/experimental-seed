@@ -2,19 +2,18 @@
 var mongoose = require('mongoose');
 
 let MongoDBConnection = function(configuration, onFinish) {
-    let database   = configuration,
+    let database   = configuration.database,
         server     = 'mongodb://${h}/${c}'.replace('${h}', database.host).replace('${c}', database.collection),
-        connection = mongoose.connect(server);
+        connection = mongoose.createConnection(server);
 
     mongoose.set('debug', (database.debug || false));
 
-    mongoose.connection.once('open', function(callback) {
+    connection.once('open', function(callback) {
         dev.debug('MongoDB Server: Application connected with success!'.green);
         return onFinish(null);;
-
     });
 
-    mongoose.connection.on('error', function(err) {
+    connection.on('error', function(err) {
         dev.debug('MongoDB Server: Some error happend, please follow the error'.red);
         dev.debug(err);
         return onFinish(null);

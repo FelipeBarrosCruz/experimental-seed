@@ -1,62 +1,35 @@
 'use strict';
 
-// Set the 'NODE_ENV' variable
-process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+let commander = require('commander')
+    .option('-c, --cookie [status]', 'Add specific use postman cookie', false)
+    .option('-l, --log [status]', 'Add the specified debug log [status]', false)
+    .option('-p --port [value]', 'Add the port of server', 3000)
+    .option('-r, --run [env]', 'Set enviroment [development | production]', 'development')
+    .parse(process.argv);
 
-// Load the Main module dependencies
+if (commander.run) {
+    process.env.NODE_ENV = commander.run;
+}
+
+if (commander.log) {
+    process.env.NODE_DEBUG = true;
+}
+
+if (commander.cookie) {
+    process.env.COOKIE = true;
+}
+
 let Application  = require('./src/application'),
     colors       = require('colors'),
     APP_HOST     = 'http://localhost',
-    APP_PORT     = (process.env.NODE_ENV == 'production') ? 80 : 3232;
+    APP_PORT     = commander.port;
 
-let onStart  = function(server) {
-
-    let adapter = {
-        helpers:    {
-            location:   '${dir}/app/helpers/**/index.js',
-        },
-        entity:     {
-            location:   '${dir}/app/entity/**/index.js'
-        },
-        routes:     {
-            location:   '${dir}/app/routes/**/index.js'
-        }
-    };
-
-    let database = {
-        mongo: {
-            name: 'database.mongo',
-            host: '192.165.33.56',
-            port: 27017,
-            collection: 'fvel',
-            auth: {
-                user: false,
-                pass: false
-            },
-            debug: true
-        },
-        neo4j: {
-            name: 'database.neo4j',
-            host: '192.165.33.20',
-            port: 7474,
-            auth: {
-                user: 'neo4j',
-                pass: '1q2w3e4r'
-            },
-            debug: true
-        }
-    };
-
-    return {
-        dir:     '/var/html/fvel-seed/',
-        load: {
-            database: database,
-            adapter:  adapter
-        }
-    };
+let onStart  = (server) => {
+    let Configuration = require('./env/${ENV}'.replace('${ENV}', process.env.NODE_ENV));
+    return Configuration;
 };
 
-let onFinish = function(server) {
+let onFinish = (Configuration, Server) => {
     server.listen(APP_PORT, function() {
         dev.debug('Application Server started'.green);
         dev.debug('Application Server running on: '.green + '%s:%s'.yellow, APP_HOST, APP_PORT);

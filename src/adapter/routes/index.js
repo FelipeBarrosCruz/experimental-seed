@@ -4,11 +4,12 @@ let async               = require('async'),
     registerComponent   = require('./register-component');
 
 let RegisterRouter = function(configuration, done) {
-
     let app         = configuration.app,
         path        = configuration.path,
         injector    = configuration.injector,
-        routerList  = configuration.routerList;
+        routerList  = configuration.routerList,
+        Repository  = configuration.repository,
+        Security    = configuration.security;
 
     let getModuleName   = function(module) {
         let result;
@@ -39,13 +40,15 @@ let RegisterRouter = function(configuration, done) {
     };
 
     app.use(
-            formatModuleName(name),
-            registerComponent({
-                name:       name,
-                path:       path,
-                injector:   injector,
-                component: component
-            })
+        formatModuleName(name),
+        registerComponent({
+            name:       name,
+            path:       path,
+            injector:   injector,
+            component:  component,
+            repository: Repository,
+            security:   Security
+        })
     );
 
     dev.debug(
@@ -76,6 +79,8 @@ let RoutesAdapter = function(configuration) {
                 app:        app,
                 path:       formatPathName(file),
                 injector:   configuration.injector,
+                repository: configuration.repository,
+                security:   configuration.security,
                 routerList: require(file)
             }, done);
         });

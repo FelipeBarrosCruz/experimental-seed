@@ -1,0 +1,9 @@
+{
+    "rules":  {
+        "location": "${dir}/security/src/rules",
+        "adapter": [
+            "express",
+            "socket"
+        ]
+    }
+}

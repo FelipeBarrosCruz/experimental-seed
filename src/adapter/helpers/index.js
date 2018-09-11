@@ -16,7 +16,7 @@ let HelpersAdapter = function(configuration) {
             } catch(err) {
                 if (err.code == 'MODULE_NOT_FOUND') {
                     dev.debug('%s'.red, err);
-                    next(null);
+                    return next(null);
                 }
                 throw err;
             }

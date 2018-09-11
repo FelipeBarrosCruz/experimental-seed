@@ -1,6 +1,6 @@
 'use strict';
 
-let ActionRequest = function(Repository) {
+let ActionRequest = function(Repository, MediaConvert) {
 
     let sayHello = function(name) {
         return 'Hello '
@@ -11,6 +11,6 @@ let ActionRequest = function(Repository) {
     };
 };
 
-let Inject = ['Repository', ActionRequest];
+let Inject = ['Repository', 'app.components.media-convert', ActionRequest];
 
 module.exports = Inject;

@@ -18,6 +18,10 @@ let AppRepository = (function() {
             return result && s ? (result[s] = value) : undefined;
         },
         get: function(name, create, context) {
+            if (!name) {
+                return false;
+            }
+
             return Repository(name.split('.'), create, context);
         },
         require: function(name) {
@@ -30,11 +34,7 @@ let AppRepository = (function() {
             try {
                 response = this.set(name, require(name));
             } catch(err) {
-                if (err.code == 'MODULE_NOT_FOUND') {
-                   return dev.debug('Package'.red + ' [%s] '.yellow + 'required doest exist'.red, name);
-
-                }
-                throw err;
+                dev.debug('Package'.red + ' [%s] '.yellow + 'required doest exist'.red, name);
             }
 
             return response;

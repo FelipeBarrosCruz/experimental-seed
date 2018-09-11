@@ -1,0 +1,13 @@
+{
+    "image": {
+        "width":  600,
+        "heigth": 400
+    },
+    "video": {
+        "videoCodec": "libx264",
+        "aspect":     "4:3",
+        "size":       "50%",
+        "audioCodec": "libmp3lame",
+        "format":     "mp4"
+    }
+}
